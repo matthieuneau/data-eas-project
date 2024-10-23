@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 
 
 # Function to fetch metadata from arXiv
-def fetch_arxiv_metadata(query, max_results=5):
+def fetch_arxiv_metadata(query: str, max_results=5):
     base_url = "http://export.arxiv.org/api/query"
     params = {
         "search_query": query,  # The search query, e.g., "all:deep learning"
@@ -32,13 +32,13 @@ def fetch_arxiv_metadata(query, max_results=5):
                 "href"
             ]
 
-            # Print metadata for each article
-            print(f"Title: {title}")
-            print(f"Authors: {', '.join(authors)}")
-            print(f"Published: {published}")
-            print(f"Abstract: {summary}")
-            print(f"Link: {link_to_article}")
-            print("-" * 80)
+        return {
+            "Title": title,
+            "Authors": ", ".join(authors),
+            "Published": published,
+            "Abstract": summary,
+            "Link": link_to_article,
+        }
 
     else:
         print(f"Error: Unable to fetch data (status code: {response.status_code})")
@@ -46,4 +46,5 @@ def fetch_arxiv_metadata(query, max_results=5):
 
 # Example usage
 query = "all:deep learning"  # Search query
-fetch_arxiv_metadata(query, max_results=1)  # Fetch 3 results
+res = fetch_arxiv_metadata(query, max_results=1)  # Fetch 3 results
+print(res)
