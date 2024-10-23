@@ -44,7 +44,7 @@ def fetch_arxiv_metadata(query: str, max_results=5):
         print(f"Error: Unable to fetch data (status code: {response.status_code})")
 
 
-# Example usage
-query = "all:deep learning"  # Search query
-res = fetch_arxiv_metadata(query, max_results=1)  # Fetch 3 results
-print(res)
+if __name__ == "__main__":
+    query = "all:deep learning"  # Search query
+    res = fetch_arxiv_metadata(query, max_results=1)  # Fetch 3 results
+    print(res)
