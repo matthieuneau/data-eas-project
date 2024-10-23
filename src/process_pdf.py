@@ -1,6 +1,7 @@
 import requests
 import pdfplumber
 import io
+import re
 
 
 def extract_text_from_pdf(url: str) -> str:
@@ -20,11 +21,7 @@ def extract_text_from_pdf(url: str) -> str:
     return all_text
 
 
-def extract_references_from_article(text: str) -> list:
-    pass  # TODO: Implement this function
-
-
-# Example usage
-url = "http://arxiv.org/pdf/1805.08355v1"
-text = extract_text_from_pdf(url)
-print(text[:1000])  # Print the first 1000 characters of the extracted text
+if __name__ == "__main__":
+    url = "http://arxiv.org/pdf/1805.08355v1"
+    text = extract_text_from_pdf(url)
+    print(text[:1000])  # Print the first 1000 characters of the extracted text
