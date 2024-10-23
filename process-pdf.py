@@ -21,7 +21,7 @@ def extract_text_from_pdf(url: str) -> str:
 
 
 def extract_references_from_article(text: str) -> list:
-    pass  # Implement this function
+    pass  # TODO: Implement this function
 
 
 # Example usage
