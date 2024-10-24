@@ -1,9 +1,13 @@
 import requests
+from typing import List, Dict
 import xml.etree.ElementTree as ET
 
 
 # Function to fetch metadata from arXiv
-def fetch_arxiv_metadata(query: str, max_results=5):
+def fetch_arxiv_metadata(query: str, max_results=5) -> List[Dict]:
+    """
+    Returns metadata of the articles from arXiv based on the search query.
+    """
     base_url = "http://export.arxiv.org/api/query"
     params = {
         "search_query": query,  # The search query, e.g., "all:deep learning"
@@ -19,6 +23,8 @@ def fetch_arxiv_metadata(query: str, max_results=5):
         # Parse the XML response
         root = ET.fromstring(response.content)
 
+        results = []
+
         # Extract metadata from each entry
         for entry in root.findall("{http://www.w3.org/2005/Atom}entry"):
             title = entry.find("{http://www.w3.org/2005/Atom}title").text
@@ -32,19 +38,23 @@ def fetch_arxiv_metadata(query: str, max_results=5):
                 "href"
             ]
 
-        return {
-            "Title": title,
-            "Authors": ", ".join(authors),
-            "Published": published,
-            "Abstract": summary,
-            "Link": link_to_article,
-        }
+            results.append(
+                {
+                    "title": title,
+                    "authors": authors,
+                    "published": published,
+                    "summary": summary,
+                    "link": link_to_article,
+                }
+            )
 
     else:
         print(f"Error: Unable to fetch data (status code: {response.status_code})")
 
+    return results
+
 
 if __name__ == "__main__":
     query = "all:deep learning"  # Search query
-    res = fetch_arxiv_metadata(query, max_results=1)  # Fetch 3 results
+    res = fetch_arxiv_metadata(query, max_results=3)  # Fetch 3 results
     print(res)
