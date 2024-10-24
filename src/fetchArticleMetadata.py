@@ -32,7 +32,7 @@ def fetch_arxiv_metadata(query: str, max_results=5) -> List[Dict]:
                 author.find("{http://www.w3.org/2005/Atom}name").text
                 for author in entry.findall("{http://www.w3.org/2005/Atom}author")
             ]
-            published = entry.find("{http://www.w3.org/2005/Atom}published").text
+            publication_date = entry.find("{http://www.w3.org/2005/Atom}published").text
             summary = entry.find("{http://www.w3.org/2005/Atom}summary").text.strip()
             link_to_article = entry.find("{http://www.w3.org/2005/Atom}link").attrib[
                 "href"
@@ -42,7 +42,7 @@ def fetch_arxiv_metadata(query: str, max_results=5) -> List[Dict]:
                 {
                     "title": title,
                     "authors": authors,
-                    "published": published,
+                    "publication_date": publication_date,
                     "summary": summary,
                     "link": link_to_article,
                 }
