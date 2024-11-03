@@ -59,6 +59,4 @@ if __name__ == "__main__":
     res = fetch_arxiv_metadata(query, max_results=3)  # Fetch 3 results
     print(res)
 
-# commit line 1
-# commit line 2
-# commit line 3
+# Regretful commit
