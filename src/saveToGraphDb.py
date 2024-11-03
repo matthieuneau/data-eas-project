@@ -5,7 +5,7 @@ driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "Arxiv123"
 
 
 def add_paper_to_db(
-    title: str, paper_index: str, authors: List[str], publication_year: int
+    title: str, authors: List[str], paper_index: str, publication_year: int
 ) -> None:
     """
     Add a paper to the graph database.
