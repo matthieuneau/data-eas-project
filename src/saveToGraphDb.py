@@ -75,6 +75,5 @@ if __name__ == "__main__":
     )
     add_relation_to_db("1234.56789", "9876.54321")
 
-# commit line 1
-# commit line 2
-# commit line 3
+# Commit line
+# Fixed typo
