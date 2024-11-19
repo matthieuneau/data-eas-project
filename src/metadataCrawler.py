@@ -1,7 +1,9 @@
 from processPdf import extract_text_from_pdf
+from utils import convert_metadata_for_neo4j
 from getReferencesArticles import extract_arxiv_references_from_article
 from fetchArticleMetadata import fetch_arxiv_metadata
 from saveMetadataToDb import store_articles_in_db
+import saveToGraphDb
 from typing import List
 
 
@@ -37,8 +39,19 @@ class MetadataCrawler:
                 if reference not in self.visited_ids
             ]
 
+            # Add the citation relation to the graph database
+            # TODO: MAKE IT WORK. For now, ref is not in the DB yet so nothing will happen
+            for ref in references:
+                saveToGraphDb.add_relation_to_db(current_id, ref)
+
+            # Store metadata in relational database
             metadata = fetch_arxiv_metadata(f"id:{current_id}")
             store_articles_in_db(metadata)
+
+            # Save article to the graph database
+            metadata = convert_metadata_for_neo4j(metadata[0])
+            saveToGraphDb.add_paper_to_db(**metadata)
+
             self.visited_ids.append(current_id)
             self.scraped_counter += 1
             self.queue.extend(references)

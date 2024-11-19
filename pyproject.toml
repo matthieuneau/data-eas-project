@@ -11,6 +11,7 @@ python = "^3.12"
 requests = "^2.32.3"
 pdfplumber = "^0.11.4"
 psycopg2 = "^2.9.10"
+neo4j = "^5.26.0"
 
 
 [build-system]
