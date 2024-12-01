@@ -1,7 +1,16 @@
 from typing import List
 from neo4j import GraphDatabase
+from dotenv import load_dotenv
+import os
 
-driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "Arxiv123"))
+load_dotenv()
+
+NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "password")
+
+# Create the driver
+driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
 
 
 def add_paper_to_db(
@@ -10,7 +19,6 @@ def add_paper_to_db(
     """
     Add a paper to the graph database.
     """
-    # TODO: move to .env
     query = """
     MERGE (p:Paper {paper_index: $paper_index})
     SET p.title = $title,
