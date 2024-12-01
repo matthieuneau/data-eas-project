@@ -3,6 +3,7 @@ from typing import List, Dict
 
 
 def store_articles_in_db(articles: List[Dict]) -> None:
+    # TODO: Add this to .env
     conn = psycopg2.connect(
         dbname="postgres",
         user="matthieuneau",
