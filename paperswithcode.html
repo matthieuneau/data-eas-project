@@ -1,0 +1,1434 @@
+
+
+
+
+
+
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <script>
+    const GTAG_ENABLED =  true ;
+    const GTAG_TRACKING_ID = "UA-121182717-1";
+    const SENTRY_DSN_FRONTEND = "".trim();
+    const GLOBAL_CSRF_TOKEN = 'GxRWjcaexRmhIkbI4aB3zbChk9oJ9w6CODYFWHcmcJLcImeTQVf4zvKzOMeKg0bh';
+    const MEDIA_URL = "https://production-media.paperswithcode.com/";
+    const ASSETS_URL = "https://production-assets.paperswithcode.com";
+    run_after_frontend_loaded = window.run_after_frontend_loaded || [];
+  </script>
+  <link rel="preconnect" href="https://production-assets.paperswithcode.com"><link rel="dns-prefetch" href="https://production-assets.paperswithcode.com"><link rel="preload" as="font" type="font/woff2" href="https://production-assets.paperswithcode.com/perf/fonts/65e877e527022735c1a1.woff2" crossorigin><link rel="preload" as="font" type="font/woff2" href="https://production-assets.paperswithcode.com/perf/fonts/917632e36982ca7933c8.woff2" crossorigin><link rel="preload" as="font" type="font/woff2" href="https://production-assets.paperswithcode.com/perf/fonts/f1405bd8a987c2ea8a67.woff2" crossorigin><script>(()=>{if(GTAG_ENABLED){const t=document.createElement("script");function n(){window.dataLayer.push(arguments)}t.src=`https://www.googletagmanager.com/gtag/js?id=${GTAG_TRACKING_ID}`,document.head.appendChild(t),window.dataLayer=window.dataLayer||[],window.gtag=n,n("js",new Date),n("config",GTAG_TRACKING_ID),window.captureOutboundLink=function(t){n("event","click",{event_category:"outbound",event_label:t})}}else window.captureOutboundLink=function(n){document.location=n}})();</script><link rel="preload" as="script" href="https://production-assets.paperswithcode.com/perf/766.4af6b88b.js"><link rel="preload" as="script" href="https://production-assets.paperswithcode.com/perf/351.a22a9607.js"><link rel="preload" as="script" href="https://production-assets.paperswithcode.com/perf/814.49dcf06c.js"><link rel="preload" as="style" href="https://production-assets.paperswithcode.com/perf/918.c41196c3.css"><link rel="preload" as="style" href="https://production-assets.paperswithcode.com/perf/view_method.e499b4af.css"><link rel="preload" as="script" href="https://production-assets.paperswithcode.com/perf/view_method.c1f0a493.js"><link rel="stylesheet" href="https://production-assets.paperswithcode.com/perf/918.c41196c3.css"><link rel="stylesheet" href="https://production-assets.paperswithcode.com/perf/view_method.e499b4af.css">
+  
+    
+
+
+  <!-- Metadata -->
+  <title>VAE Explained | Papers With Code</title>
+  <meta name="description" content="A Variational Autoencoder is a type of likelihood-based generative model. It consists of an encoder, that takes in data $x$ as input and transforms this into a latent representation $z$,  and a decoder, that takes a latent representation $z$ and returns a reconstruction $\hat{x}$. Inference is performed via variational inference to approximate the posterior of the model." />
+  
+
+
+  <!-- Open Graph protocol metadata -->
+  <meta property="og:title" content="Papers with Code - VAE Explained">
+  <meta property="og:description" content="A Variational Autoencoder is a type of likelihood-based generative model. It consists of an encoder, that takes in data $x$ as input and transforms this into a latent representation $z$,  and a decoder, that takes a latent representation $z$ and returns a reconstruction $\hat{x}$. Inference is performed via variational inference to approximate the posterior of the model.">
+  
+  <meta property="og:image" content="https://production-media.paperswithcode.com/methods/Screen_Shot_2020-07-07_at_4.47.56_PM_Y06uCVO.png">
+  
+  <meta property="og:url" content="https://paperswithcode.com/method/vae">
+  
+
+
+  <!-- Twitter metadata -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@paperswithcode">
+  <meta name="twitter:title" content="Papers with Code - VAE Explained">
+  <meta name="twitter:description" content="A Variational Autoencoder is a type of likelihood-based generative model. It consists of an encoder, that takes in data $x$ as input and transforms this into a latent representation $z$,  and a decoder, that takes a latent representation $z$ and returns a reconstruction $\hat{x}$. Inference is performed via variational inference to approximate the posterior of the model.">
+  <meta name="twitter:creator" content="@paperswithcode">
+  <meta name="twitter:url" content="https://paperswithcode.com/method/vae">
+  <meta name="twitter:domain" content="paperswithcode.com">
+
+
+<!-- JSON LD -->
+
+<script type="application/ld+json">{
+    "@context": "http://schema.org",
+    "@graph": {
+        "@type": "CreativeWork",
+        "@id": "vae",
+        "name": "VAE Explained",
+        "description": "A Variational Autoencoder is a type of likelihood-based generative model. It consists of an encoder, that takes in data $x$ as input and transforms this into a latent representation $z$,  and a decoder, that takes a latent representation $z$ and returns a reconstruction $\\hat{x}$. Inference is performed via variational inference to approximate the posterior of the model.",
+        "url": "https://paperswithcode.com/method/vae",
+        "image": "https://production-media.paperswithcode.com/methods/Screen_Shot_2020-07-07_at_4.47.56_PM_Y06uCVO.png",
+        "headline": "VAE Explained"
+    }
+}</script>
+
+  
+  <meta name="theme-color" content="#fff"/>
+  <link rel="manifest" href="https://production-assets.paperswithcode.com/static/manifest.web.json">
+
+  
+  
+</head>
+<body>
+
+
+
+
+    
+
+<nav class="navbar navbar-expand-lg navbar-light header">
+  <a class="navbar-brand" href="/">
+    
+      <span class=" icon-wrapper" data-name="pwc"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M88 128h48v256H88zm144 0h48v256h-48zm-72 16h48v224h-48zm144 0h48v224h-48zm72-16h48v256h-48z"/><path d="M104 104V56H16v400h88v-48H64V104zm304-48v48h40v304h-40v48h88V56z"/></svg></span>
+    
+  </a>
+
+  <div class="navbar-mobile-twitter d-lg-none">
+    <a rel="noreferrer" href="https://twitter.com/paperswithcode">
+      <span class=" icon-wrapper icon-fa icon-fa-brands" data-name="twitter"><svg viewBox="0 0 512.001 515.25" xmlns="http://www.w3.org/2000/svg"><path d="M459.37 152.016c.326 4.548.326 9.097.326 13.645 0 138.72-105.583 298.558-298.559 298.558C101.685 464.22 46.457 447 0 417.114c8.447.973 16.568 1.298 25.34 1.298 49.054 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.113-72.772 6.499.975 12.996 1.624 19.819 1.624 9.42 0 18.843-1.3 27.613-3.573-48.08-9.747-84.142-51.98-84.142-102.984v-1.3c13.968 7.798 30.213 12.67 47.43 13.32-28.263-18.843-46.78-51.006-46.78-87.391 0-19.492 5.196-37.36 14.294-52.954 51.654 63.674 129.3 105.258 216.364 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.827 46.782-104.934 104.934-104.934 30.214 0 57.502 12.67 76.671 33.136 23.715-4.548 46.455-13.319 66.599-25.34-7.798 24.367-24.366 44.834-46.132 57.828 21.117-2.274 41.584-8.122 60.426-16.244-14.292 20.791-32.161 39.309-52.628 54.253z"/></svg></span>
+    </a>
+  </div>
+  <button
+    class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-bs-toggle="collapse"
+    data-target="#top-menu"
+    data-bs-target="#top-menu"
+    aria-controls="top-menu"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="top-menu">
+    <ul class="navbar-nav mr-auto navbar-nav__left light-header">
+      <li class="nav-item header-search">
+        <form action="/search" method="get" id="id_global_search_form" autocomplete="off">
+          <input type="text" name="q_meta" style="display:none" id="q_meta" />
+          <input type="hidden" name="q_type" id="q_type" />
+          <input id="id_global_search_input" autocomplete="off" value="" name='q' class="global-search" type="search" placeholder='Search'/>
+          <button type="submit" class="icon"><span class=" icon-wrapper icon-fa icon-fa-light" data-name="search"><svg viewBox="0 0 512.025 520.146" xmlns="http://www.w3.org/2000/svg"><path d="M508.5 482.6c4.7 4.7 4.7 12.3 0 17l-9.9 9.9c-4.7 4.7-12.3 4.7-17 0l-129-129c-2.2-2.3-3.5-5.3-3.5-8.5v-10.2C312 396 262.5 417 208 417 93.1 417 0 323.9 0 209S93.1 1 208 1s208 93.1 208 208c0 54.5-21 104-55.3 141.1H371c3.2 0 6.2 1.2 8.5 3.5zM208 385c97.3 0 176-78.7 176-176S305.3 33 208 33 32 111.7 32 209s78.7 176 176 176z"/></svg></span></button>
+        </form>
+      </li>
+
+      
+        
+        
+        
+        <li class="nav-item">
+          <a class="nav-link" href="/sota">
+            Browse State-of-the-Art
+          </a>
+        </li>
+
+        
+          <li class="nav-item">
+            <a class="nav-link" href="/datasets"> Datasets </a>
+          </li>
+        
+
+        
+            <li class="nav-item">
+              <a class="nav-link" href="/methods">Methods</a>
+            </li>
+        
+
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            role="button"
+            id="navbarDropdownRepro"
+            data-toggle="dropdown"
+            data-bs-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            More
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownRepro">
+        
+            <a class="dropdown-item" href="/newsletter">Newsletter</a>
+            <a class="dropdown-item" href="/rc2022">RC2022</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/about">About</a>
+            <a class="dropdown-item" href="/trends">Trends</a>
+              
+                  <a class="dropdown-item" href="https://portal.paperswithcode.com/">
+                      Portals
+                  </a>
+              
+              
+                  <a class="dropdown-item" href="/libraries"> Libraries </a>
+              
+          </div>
+        </li>
+
+          
+
+
+
+      
+    </ul>
+
+    <ul class="navbar-nav ml-auto navbar-nav__right navbar-subscribe justify-content-center align-items-center">
+      
+
+      <li class="nav-item">
+        <a class="nav-link" rel="noreferrer" href="https://twitter.com/paperswithcode">
+          <span class="nav-link-social-icon icon-wrapper icon-fa icon-fa-brands" data-name="twitter"><svg viewBox="0 0 512.001 515.25" xmlns="http://www.w3.org/2000/svg"><path d="M459.37 152.016c.326 4.548.326 9.097.326 13.645 0 138.72-105.583 298.558-298.559 298.558C101.685 464.22 46.457 447 0 417.114c8.447.973 16.568 1.298 25.34 1.298 49.054 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.113-72.772 6.499.975 12.996 1.624 19.819 1.624 9.42 0 18.843-1.3 27.613-3.573-48.08-9.747-84.142-51.98-84.142-102.984v-1.3c13.968 7.798 30.213 12.67 47.43 13.32-28.263-18.843-46.78-51.006-46.78-87.391 0-19.492 5.196-37.36 14.294-52.954 51.654 63.674 129.3 105.258 216.364 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.827 46.782-104.934 104.934-104.934 30.214 0 57.502 12.67 76.671 33.136 23.715-4.548 46.455-13.319 66.599-25.34-7.798 24.367-24.366 44.834-46.132 57.828 21.117-2.274 41.584-8.122 60.426-16.244-14.292 20.791-32.161 39.309-52.628 54.253z"/></svg></span>
+        </a>
+      </li>
+
+     
+
+      
+        <li class="nav-item">
+          <a id="signin-link" class="nav-link" href="/accounts/login?next=/method/vae">Sign In</a>
+        </li>
+      
+    </ul>
+  </div>
+</nav>
+
+
+
+
+
+<!-- Page modals -->
+<div class="modal fade" id="emailModal" tabindex="-1" role="dialog" aria-labelledby="emailModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="emailModalLabel">Subscribe to the PwC Newsletter</h3>
+        <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="" method="post">
+        <div class="modal-body">
+          <div class="modal-body-info-text">
+            Stay informed on the latest trending ML papers with code, research developments, libraries, methods, and datasets.<br/><br/>
+            <a href="/newsletter">Read previous issues</a>
+          </div>
+
+          <input type="hidden" name="csrfmiddlewaretoken" value="GxRWjcaexRmhIkbI4aB3zbChk9oJ9w6CODYFWHcmcJLcImeTQVf4zvKzOMeKg0bh">
+          <input placeholder="Enter your email" type="email" class="form-control pwc-email" name="address" id="id_address" max_length="100" required>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Login -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModalLabel">Join the community</h5>
+        <button type="button" class="close btn-close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="login-modal-message">
+        You need to <a href="/accounts/login?next=/method/vae">log in</a> to edit.<br/>
+        You can <a href="/accounts/register?next=/method/vae">create a new account</a> if you don't have one.<br/><br/>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+    <!-- Edit Method -->
+    <div class="modal fade" id="editMethod" role="dialog"
+         aria-labelledby="editMethodLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editMethodLabel">Edit Method</h5>
+                    <button type="button" class="close btn-close" data-bs-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post"
+                          enctype="multipart/form-data">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="GxRWjcaexRmhIkbI4aB3zbChk9oJ9w6CODYFWHcmcJLcImeTQVf4zvKzOMeKg0bh">
+                        
+
+
+    
+    <div id="div_id_name" class="form-group">
+        
+            <label for="id_name" class=" requiredField">
+                Method Name:<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+
+        
+            
+                <div class="">
+                    
+                        <input type="text" name="name" value="VAE" maxlength="200" class="textinput textInput form-control" required id="id_name">
+                    
+                    
+
+
+    
+
+
+
+
+    
+
+
+
+                </div>
+            
+        
+    </div>
+    
+
+
+                        
+
+
+    
+    <div id="div_id_full_name" class="form-group">
+        
+            <label for="id_full_name" class=" requiredField">
+                Method Full Name:<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+
+        
+            
+                <div class="">
+                    
+                        <input type="text" name="full_name" value="Variational Autoencoder" maxlength="200" class="textinput textInput form-control" required id="id_full_name">
+                    
+                    
+
+
+    
+
+
+
+
+    
+
+
+
+                </div>
+            
+        
+    </div>
+    
+
+
+                        
+
+
+    
+    <div id="div_id_description" class="form-group">
+        
+            <label for="id_description" class="">
+                Description with Markdown (optional):
+            </label>
+        
+
+        
+
+        
+
+        
+            
+                <div class="">
+                    
+                        <textarea name="description" cols="40" rows="12" class="textarea form-control" id="id_description">
+A **Variational Autoencoder** is a type of likelihood-based generative model. It consists of an encoder, that takes in data $x$ as input and transforms this into a latent representation $z$,  and a decoder, that takes a latent representation $z$ and returns a reconstruction $\hat{x}$. Inference is performed via variational inference to approximate the posterior of the model.</textarea>
+                    
+                    
+
+
+    
+
+
+
+
+    
+
+
+
+                </div>
+            
+        
+    </div>
+    
+
+
+                        
+
+
+    
+    <div id="div_id_code_snippet_url" class="form-group">
+        
+            <label for="id_code_snippet_url" class="">
+                Code Snippet URL (optional):
+            </label>
+        
+
+        
+
+        
+
+        
+            
+                <div class="">
+                    
+                        <input type="text" name="code_snippet_url" value="https://github.com/AntixK/PyTorch-VAE/blob/8700d245a9735640dda458db4cf40708caf2e77f/models/vanilla_vae.py#L8" maxlength="200" class="textinput textInput form-control" id="id_code_snippet_url">
+                    
+                    
+
+
+    
+
+
+
+
+    
+
+
+
+                </div>
+            
+        
+    </div>
+    
+
+
+                        
+
+
+    
+    <div id="div_id_image" class="form-group">
+        
+            <label for="id_image" class="">
+                Image
+            </label>
+        
+
+        
+
+        
+
+        
+            
+                <div class="">
+                    
+                        Currently: <a href="https://production-media.paperswithcode.com/methods/Screen_Shot_2020-07-07_at_4.47.56_PM_Y06uCVO.png">methods/Screen_Shot_2020-07-07_at_4.47.56_PM_Y06uCVO.png</a>
+<input type="checkbox" name="image-clear" id="image-clear_id">
+<label for="image-clear_id">Clear</label><br>
+Change:
+<input type="file" name="image" accept="image/*" class="clearablefileinput form-control-file" id="id_image">
+                    
+                    
+
+
+    
+
+
+
+
+    
+
+
+
+                </div>
+            
+        
+    </div>
+    
+
+
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Collection -->
+    <div class="modal fade" id="addCollection" role="dialog"
+         aria-labelledby="addCollectionLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addCollectionLabel">Add A Method Collection</h5>
+                    <button type="button" class="close btn-close" data-bs-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    
+                        <div class="current-tasks-title">Attached collections:</div>
+                    
+                    
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="/methods/category/generative-models">
+                                    <span class="badge badge-primary">GENERATIVE MODELS</span>
+                                </a>
+                            </li>
+                        </ul>
+                    
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="/methods/category/likelihood-based-generative-models">
+                                    <span class="badge badge-primary">LIKELIHOOD-BASED GENERATIVE MODELS</span>
+                                </a>
+                            </li>
+                        </ul>
+                    
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="/methods/category/attention-mechanisms-1">
+                                    <span class="badge badge-primary">ATTENTION MECHANISMS</span>
+                                </a>
+                            </li>
+                        </ul>
+                    
+                    <form action="" method="post">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="GxRWjcaexRmhIkbI4aB3zbChk9oJ9w6CODYFWHcmcJLcImeTQVf4zvKzOMeKg0bh">
+                        
+
+
+    
+    <div id="div_id_collection" class="form-group">
+        
+            <label for="id_collection" class="">
+                Add:
+            </label>
+        
+
+        
+
+        
+
+        
+            
+                <div class="">
+                    
+                        <select name="collection" class="modelselect2 form-control" id="id_collection" data-autocomplete-light-language="en" data-autocomplete-light-url="/method-collection-autocomplete/" data-autocomplete-light-function="select2">
+  <option value="" selected>---------</option>
+
+</select>
+                    
+                    
+
+
+    
+
+
+
+
+    
+
+
+
+                </div>
+            
+        
+    </div>
+    
+
+
+
+                        <div class="modal-help-text">
+                            Not in the list?<br/>
+                            <a href="#" id="show-new-collection-form-hidden">
+                            <span class=" icon-wrapper icon-ion" data-name="add"><svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M256 112v288m144-144H112"/></svg></span>
+                                Create a new collection</a>.
+                        </div>
+
+                        <div class="new-collection-form-hidden">
+                            
+
+
+    
+    <div id="div_id_new_collection_name" class="form-group">
+        
+            <label for="id_new_collection_name" class="">
+                New collection name:
+            </label>
+        
+
+        
+
+        
+
+        
+            
+                <div class="">
+                    
+                        <input type="text" name="new_collection_name" maxlength="200" class="textinput textInput form-control" id="id_new_collection_name">
+                    
+                    
+
+
+    
+
+
+
+
+    
+
+
+
+                </div>
+            
+        
+    </div>
+    
+
+
+                            
+
+
+    
+    <div id="div_id_new_collection_area" class="form-group">
+        
+            <label for="id_new_collection_area" class="">
+                Top-level area:
+            </label>
+        
+
+        
+
+        
+
+        
+            
+                <div class="">
+                    
+                        <select name="new_collection_area" class="select form-control" id="id_new_collection_area">
+  <option value="" selected>---------</option>
+
+  <option value="7">Audio</option>
+
+  <option value="1">Computer Vision</option>
+
+  <option value="3">General</option>
+
+  <option value="4">Graphs</option>
+
+  <option value="2">Natural Language Processing</option>
+
+  <option value="5">Reinforcement Learning</option>
+
+  <option value="6">Sequential</option>
+
+</select>
+                    
+                    
+
+
+    
+
+
+
+
+    
+
+
+
+                </div>
+            
+        
+    </div>
+    
+
+
+                            
+
+
+    
+    <div id="div_id_new_collection_parent" class="form-group">
+        
+            <label for="id_new_collection_parent" class="">
+                Parent collection (if any):
+            </label>
+        
+
+        
+
+        
+
+        
+            
+                <div class="">
+                    
+                        <select name="new_collection_parent" class="modelselect2 form-control" id="id_new_collection_parent" data-autocomplete-light-language="en" data-autocomplete-light-url="/method-collection-autocomplete/" data-autocomplete-light-function="select2">
+  <option value="" selected>---------</option>
+
+</select>
+                    
+                    
+
+
+    
+
+
+
+
+    
+
+
+
+                </div>
+            
+        
+    </div>
+    
+
+
+                            
+
+
+    
+    <div id="div_id_new_collection_desc" class="form-group">
+        
+            <label for="id_new_collection_desc" class="">
+                Description (optional):
+            </label>
+        
+
+        
+
+        
+
+        
+            
+                <div class="">
+                    
+                        <textarea name="new_collection_desc" cols="40" rows="3" class="textarea form-control" id="id_new_collection_desc">
+</textarea>
+                    
+                    
+
+
+    
+
+
+
+
+    
+
+
+
+                </div>
+            
+        
+    </div>
+    
+
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove Collection -->
+    <div class="modal fade" id="removeCollection" tabindex="-1" role="dialog"
+         aria-labelledby="removeCollectionLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="removeCollectionLabel">Remove a
+                        collection</h5>
+                    <button type="button" class="close btn-close" data-bs-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" method="post">
+                    <div class="modal-body">
+                        
+                            <ul class="list-unstyled">
+                                <form action="" method="post">
+                                    <li>
+                                        <a href="/methods/category/generative-models">
+                                            <span class="badge badge-primary">GENERATIVE MODELS</span>
+                                        </a>
+                                        <input type="hidden" name="csrfmiddlewaretoken" value="GxRWjcaexRmhIkbI4aB3zbChk9oJ9w6CODYFWHcmcJLcImeTQVf4zvKzOMeKg0bh">
+                                        <input type="hidden"
+                                               name="remove_collection_pk"
+                                               value="2">
+                                        <button type="submit"
+                                                class="btn btn-danger"
+                                                style="width:2.5em">-
+                                        </button>
+                                    </li>
+                                </form>
+                            </ul>
+                        
+                            <ul class="list-unstyled">
+                                <form action="" method="post">
+                                    <li>
+                                        <a href="/methods/category/likelihood-based-generative-models">
+                                            <span class="badge badge-primary">LIKELIHOOD-BASED GENERATIVE MODELS</span>
+                                        </a>
+                                        <input type="hidden" name="csrfmiddlewaretoken" value="GxRWjcaexRmhIkbI4aB3zbChk9oJ9w6CODYFWHcmcJLcImeTQVf4zvKzOMeKg0bh">
+                                        <input type="hidden"
+                                               name="remove_collection_pk"
+                                               value="104">
+                                        <button type="submit"
+                                                class="btn btn-danger"
+                                                style="width:2.5em">-
+                                        </button>
+                                    </li>
+                                </form>
+                            </ul>
+                        
+                            <ul class="list-unstyled">
+                                <form action="" method="post">
+                                    <li>
+                                        <a href="/methods/category/attention-mechanisms-1">
+                                            <span class="badge badge-primary">ATTENTION MECHANISMS</span>
+                                        </a>
+                                        <input type="hidden" name="csrfmiddlewaretoken" value="GxRWjcaexRmhIkbI4aB3zbChk9oJ9w6CODYFWHcmcJLcImeTQVf4zvKzOMeKg0bh">
+                                        <input type="hidden"
+                                               name="remove_collection_pk"
+                                               value="108">
+                                        <button type="submit"
+                                                class="btn btn-danger"
+                                                style="width:2.5em">-
+                                        </button>
+                                    </li>
+                                </form>
+                            </ul>
+                        
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Component -->
+    <div class="modal fade" id="addComponent" role="dialog"
+         aria-labelledby="addComponentLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addComponentLabel">Add A Method Component</h5>
+                    <button type="button" class="close btn-close" data-bs-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    
+                    
+                    <form action="" method="post">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="GxRWjcaexRmhIkbI4aB3zbChk9oJ9w6CODYFWHcmcJLcImeTQVf4zvKzOMeKg0bh">
+                        
+
+
+    
+    <div id="div_id_dependency" class="form-group">
+        
+            <label for="id_dependency" class=" requiredField">
+                Add:<span class="asteriskField">*</span>
+            </label>
+        
+
+        
+
+        
+
+        
+            
+                <div class="">
+                    
+                        <select name="dependency" class="modelselect2 form-control" required id="id_dependency" data-autocomplete-light-language="en" data-autocomplete-light-url="/method-autocomplete/" data-autocomplete-light-function="select2">
+  <option value="" selected>---------</option>
+
+</select>
+                    
+                    
+
+
+    
+
+
+
+
+    
+
+
+
+                </div>
+            
+        
+    </div>
+    
+
+
+                        
+
+
+    
+        <div class="form-group">
+        
+    
+    <div id="div_id_optional" class="form-check">
+        
+
+        
+
+        
+
+        
+            
+                
+                    <input type="checkbox" name="optional" class="checkboxinput form-check-input" id="id_optional">
+                
+                <label for="id_optional" class="form-check-label">
+                    Tick if this dependency is optional
+                </label>
+                
+
+
+    
+
+
+
+
+    
+
+
+
+            
+        
+    </div>
+    
+        
+        </div>
+    
+
+
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove Component -->
+    <div class="modal fade" id="removeComponent" tabindex="-1" role="dialog"
+         aria-labelledby="removeComponentLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="removeCompoenntnLabel">Remove a
+                        method component</h5>
+                    <button type="button" class="close btn-close" data-bs-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" method="post">
+                    <div class="modal-body">
+                        
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+<div class="container content content-buffer ">
+
+  
+    <div class="mobile-width">
+
+    <div class="method-header">
+    
+        <a href="/methods/category/generative-models">
+            <span class="badge badge-primary">
+                
+                    <img src="https://production-media.paperswithcode.com/thumbnails/method/9a2467a0-d18a-4207-8fbf-64263d33ced8.jpg">
+                
+            <span>Generative Models</span>
+            </span>
+        </a>
+    
+
+    <div class="method-title">
+        <div class="row">
+
+            <div class="col-md-11">
+                <h1>Variational Autoencoder</h1>
+
+                
+                    <span class="method-subtitle">Introduced by Kingma et al. in <a
+                            href="/paper/auto-encoding-variational-bayes">Auto-Encoding Variational Bayes</a></span>
+                
+            </div>
+        <div class="col-md-1">
+            <div class="float-right"> 
+                <div class="dropdown edit-button">
+                    <a data-bs-toggle="modal"
+                       data-bs-target="#loginModal">
+                        <span class="badge badge-method-edit"
+                              style="padding-top:10px;"><span class=" icon-wrapper icon-fa icon-fa-solid" data-name="edit"><svg viewBox="0 0 576 514.999" xmlns="http://www.w3.org/2000/svg"><path d="M402.6 85.198l90.2 90.2c3.8 3.8 3.8 10 0 13.8l-218.399 218.4-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8 218.4-218.4c3.799-3.8 10-3.8 13.799 0zm162-22.9c15.2 15.2 15.2 39.9 0 55.2l-35.4 35.4c-3.8 3.8-10 3.8-13.8 0l-90.2-90.2c-3.8-3.8-3.8-10 0-13.8l35.4-35.4c15.3-15.2 40-15.2 55.2 0zM384 348.198c0-3.2 1.3-6.2 3.5-8.5l40-40c7.6-7.5 20.5-2.2 20.5 8.5v157.8c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48v-352c0-26.5 21.5-48 48-48h285.8c10.7 0 16.1 12.9 8.5 20.5l-40 40c-2.3 2.2-5.3 3.5-8.5 3.5H64v320h320v-101.8z"/></svg></span> Edit</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+
+    <div class="method-content" style="margin-top: 2rem;">
+
+        <div class="row">
+            <div class="col-md-8 description">
+                <p>A <strong>Variational Autoencoder</strong> is a type of likelihood-based generative model. It consists of an encoder, that takes in data $x$ as input and transforms this into a latent representation $z$,  and a decoder, that takes a latent representation $z$ and returns a reconstruction $\hat{x}$. Inference is performed via variational inference to approximate the posterior of the model.</p>
+                
+                    <span class="description-source">
+                        Source: <a href="http://arxiv.org/abs/1312.6114v10"><span class=" icon-wrapper icon-ion" data-name="document-outline"><svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><path d="M416 221.25V416a48 48 0 0 1-48 48H144a48 48 0 0 1-48-48V96a48 48 0 0 1 48-48h98.75a32 32 0 0 1 22.62 9.37l141.26 141.26a32 32 0 0 1 9.37 22.62z" fill="none" stroke="#000" stroke-linejoin="round" stroke-width="32"/><path d="M256 56v120a32 32 0 0 0 32 32h120" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg></span> Auto-Encoding Variational Bayes</a>
+                    </span>
+
+            
+            <div class="context">
+                <div class="row">
+                    <div class="col-md-12">
+                        
+                        <a href="https://arxiv.org/abs/1312.6114v10"
+                           onclick="captureOutboundLink('https://arxiv.org/abs/1312.6114v10'); return true;"
+                           class="badge badge-light">
+                            Read Paper
+                        </a>
+                        
+                        
+                            <a href="https://github.com/AntixK/PyTorch-VAE/blob/8700d245a9735640dda458db4cf40708caf2e77f/models/vanilla_vae.py#L8"
+                               onclick="captureOutboundLink('https://github.com/AntixK/PyTorch-VAE/blob/8700d245a9735640dda458db4cf40708caf2e77f/models/vanilla_vae.py#L8'); return true;"
+                               class="badge badge-light">
+                                See Code
+                            </a>
+                        
+                    </div>
+                </div>
+            </div>
+            
+
+
+                
+            </div>
+            <div class="col-md-4">
+                <a href="#" id="pop">
+                    
+                      <a href="https://production-media.paperswithcode.com/methods/Screen_Shot_2020-07-07_at_4.47.56_PM_Y06uCVO.png" data-lightbox="imageresource">
+                        <img id="imageresource" width=100% src="https://production-media.paperswithcode.com/methods/Screen_Shot_2020-07-07_at_4.47.56_PM_Y06uCVO.png">
+                      </a>
+                      
+                </a>
+                <div class="modal fade" id="imagemodal" tabindex="-1" role="dialog" aria-labelledby="imagePreview" aria-hidden="true">
+                  <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                      <div class="modal-body text-center">
+                        <img class="method-image" src="" id="imagepreview" style="max-width: 750px;">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="papers">
+            <h4 style="margin-bottom: 0.5rem">Papers</h4>
+            <hr>
+
+            
+
+<div class="sota-table-preview papers-datatable-component">
+  <table style="width: 100% !important;" id="datatable-papers" class="table-striped table-responsive">
+      <thead style="width: 100% !important;">
+          <tr>
+              <th style="text-left"><span>Paper</span></th>
+              <th class="text-center"><span>Code</span></th>
+              <th class="text-center"><span>Results</span></th>
+              <th class="text-right"><span>Date</span></th>
+              <th class="text-center"><span>Stars</span></th>
+          </tr>
+      </thead>
+  </table>
+</div>
+
+<script>
+  
+      const DATATABLE_PAPERS_FILTER_NAME = 'papermethod__method_id';
+      const DATATABLE_PAPERS_FILTER_VALUE = '468';
+    
+</script>
+
+        </div>
+
+        
+        <div id="tasks">
+            <h4 style="margin-bottom: 0.5rem">Tasks</h4>
+            <hr>
+            <div class="row">
+                    <div class="col-lg-6">
+                        <figure class="highcharts-figure">
+                            <div id="usage-container"></div>
+                        </figure>
+                    </div>
+                    <div class="col-lg-6 task-methods">
+                        <table>
+                            <tr>
+                                <th>Task</th>
+                                <th class="text-right">Papers</th>
+                                <th class="text-right">Share</th>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="dot" style="background-color: #2f7ed8"></span>
+                                    
+                                        <a href="/task/decoder">Decoder</a>
+                                    
+                                </td>
+                                <td class="text-right">52</td>
+                                <td class="text-right">7.14%</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="dot" style="background-color: #0d233a"></span>
+                                    
+                                        <a href="/task/image-generation">Image Generation</a>
+                                    
+                                </td>
+                                <td class="text-right">50</td>
+                                <td class="text-right">6.87%</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="dot" style="background-color: #8bbc21"></span>
+                                    
+                                        <a href="/task/disentanglement">Disentanglement</a>
+                                    
+                                </td>
+                                <td class="text-right">27</td>
+                                <td class="text-right">3.71%</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="dot" style="background-color: #f28f43"></span>
+                                    
+                                        <a href="/task/denoising">Denoising</a>
+                                    
+                                </td>
+                                <td class="text-right">23</td>
+                                <td class="text-right">3.16%</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="dot" style="background-color: rgb(128, 133, 233)"></span>
+                                    
+                                        <a href="/task/diversity">Diversity</a>
+                                    
+                                </td>
+                                <td class="text-right">20</td>
+                                <td class="text-right">2.75%</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="dot" style="background-color: rgb(241, 92, 128)"></span>
+                                    
+                                        <a href="/task/quantization">Quantization</a>
+                                    
+                                </td>
+                                <td class="text-right">16</td>
+                                <td class="text-right">2.20%</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="dot" style="background-color: rgb(228, 211, 84)"></span>
+                                    
+                                        <a href="/task/anomaly-detection">Anomaly Detection</a>
+                                    
+                                </td>
+                                <td class="text-right">13</td>
+                                <td class="text-right">1.79%</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="dot" style="background-color: rgb(43, 144, 143)"></span>
+                                    
+                                        <a href="/task/language-modelling">Language Modelling</a>
+                                    
+                                </td>
+                                <td class="text-right">13</td>
+                                <td class="text-right">1.79%</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><span class="dot" style="background-color: rgb(255, 116, 116)"></span>
+                                    
+                                        <a href="/task/video-generation">Video Generation</a>
+                                    
+                                </td>
+                                <td class="text-right">10</td>
+                                <td class="text-right">1.37%</td>
+                            </tr>
+                            
+                        </table>
+                    </div>
+                </div>
+
+        </div>
+        
+
+
+        <div id="trends">
+            <h4 style="margin-bottom: 0.5rem">Usage Over Time</h4>
+            <hr>
+            <figure style="margin-top: 2.5rem" class="highcharts-figure">
+                <div id="container"></div>
+            </figure>
+            <span class="experimental-note hidden-element"><span class=" icon-wrapper icon-ion" data-name="flask-outline"><svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><path fill="none" stroke="#000" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M176 48h160M118 304h276M208 48v93.48a64.09 64.09 0 0 1-9.88 34.18L73.21 373.49C48.4 412.78 76.63 464 123.08 464h265.84c46.45 0 74.68-51.22 49.87-90.51L313.87 175.66a64.09 64.09 0 0 1-9.87-34.18V48"/></svg></span> This feature is experimental;
+                we are continuously improving our matching algorithm.</span>
+        </div>
+
+            <div id="components">
+            <h4 style="margin-bottom: 0.5rem">Components</h4>
+            <hr>
+                <table>
+                    <tr>
+                        <th>Component</th>
+                        <th>Type</th>
+                        <th class="hidden-element">
+                            <div class="float-right">
+                                <div class="dropdown edit-button">
+                                    <button class="dropdown-toggle badge badge-edit" type="button" id="compEditMenu"
+                                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class=" icon-wrapper icon-fa icon-fa-solid" data-name="edit"><svg viewBox="0 0 576 514.999" xmlns="http://www.w3.org/2000/svg"><path d="M402.6 85.198l90.2 90.2c3.8 3.8 3.8 10 0 13.8l-218.399 218.4-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8 218.4-218.4c3.799-3.8 10-3.8 13.799 0zm162-22.9c15.2 15.2 15.2 39.9 0 55.2l-35.4 35.4c-3.8 3.8-10 3.8-13.8 0l-90.2-90.2c-3.8-3.8-3.8-10 0-13.8l35.4-35.4c15.3-15.2 40-15.2 55.2 0zM384 348.198c0-3.2 1.3-6.2 3.5-8.5l40-40c7.6-7.5 20.5-2.2 20.5 8.5v157.8c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48v-352c0-26.5 21.5-48 48-48h285.8c10.7 0 16.1 12.9 8.5 20.5l-40 40c-2.3 2.2-5.3 3.5-8.5 3.5H64v320h320v-101.8z"/></svg></span>
+                                        Edit
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="compEditMenu"
+                                         x-placement="bottom-end"
+                                         style="position: absolute; transform: translate3d(55px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                        <a class="dropdown-item"
+                                           href="#loginModal"
+                                           data-bs-toggle="modal">
+                                            <span class=" icon-wrapper icon-ion" data-name="add"><svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M256 112v288m144-144H112"/></svg></span>
+                                            Add</a>
+                                        <a class="dropdown-item"
+                                           href="#loginModal"
+                                           data-bs-toggle="modal">
+                                            <span class=" icon-wrapper icon-ion" data-name="remove"><svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M400 256H112"/></svg></span>
+                                            Remove</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </th>
+                    </tr>
+                    
+                        <tr>
+                            <td>
+                                <span style="font-weight: bold">🤖 No Components Found</span>
+                            </td>
+                        <td>You can <a data-bs-toggle="modal" href="#loginModal">add them</a> if they exist; e.g. <a href="/method/mask-r-cnn">Mask R-CNN</a> uses <a href="/method/roi-align">RoIAlign</a></td>
+                        <td class="hidden-element"></td>
+                        </tr>
+                    
+                    
+                </table>
+            </div>
+
+
+
+
+        <div class="collections">
+            <h4>
+                Categories        <div class="float-right">
+
+                    <div class="dropdown edit-button">
+                        <button class="dropdown-toggle badge badge-edit" type="button" id="evalEditMenu"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class=" icon-wrapper icon-fa icon-fa-solid" data-name="edit"><svg viewBox="0 0 576 514.999" xmlns="http://www.w3.org/2000/svg"><path d="M402.6 85.198l90.2 90.2c3.8 3.8 3.8 10 0 13.8l-218.399 218.4-92.8 10.3c-12.4 1.4-22.9-9.1-21.5-21.5l10.3-92.8 218.4-218.4c3.799-3.8 10-3.8 13.799 0zm162-22.9c15.2 15.2 15.2 39.9 0 55.2l-35.4 35.4c-3.8 3.8-10 3.8-13.8 0l-90.2-90.2c-3.8-3.8-3.8-10 0-13.8l35.4-35.4c15.3-15.2 40-15.2 55.2 0zM384 348.198c0-3.2 1.3-6.2 3.5-8.5l40-40c7.6-7.5 20.5-2.2 20.5 8.5v157.8c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48v-352c0-26.5 21.5-48 48-48h285.8c10.7 0 16.1 12.9 8.5 20.5l-40 40c-2.3 2.2-5.3 3.5-8.5 3.5H64v320h320v-101.8z"/></svg></span>
+                            Edit
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="evalEditMenu"
+                             x-placement="bottom-end"
+                             style="position: absolute; transform: translate3d(55px, 35px, 0px); top: 0px; left: 0px; will-change: transform;">
+                            <a class="dropdown-item"
+                               href="#loginModal"
+                               data-bs-toggle="modal">
+                                <span class=" icon-wrapper icon-ion" data-name="add"><svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M256 112v288m144-144H112"/></svg></span>
+                                Add</a>
+                            <a class="dropdown-item"
+                               href="#loginModal"
+                               data-bs-toggle="modal">
+                                <span class=" icon-wrapper icon-ion" data-name="remove"><svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><path fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M400 256H112"/></svg></span>
+                                Remove</a>
+                        </div>
+                    </div>
+
+                </div><hr>
+
+
+
+            </h4>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="/methods/category/generative-models">
+                                <span class="badge badge-primary">
+                                    
+                                        <img src="https://production-media.paperswithcode.com/thumbnails/method/9a2467a0-d18a-4207-8fbf-64263d33ced8.jpg">
+                                    
+                                    <span>Generative Models</span>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="/methods/category/likelihood-based-generative-models">
+                                <span class="badge badge-primary">
+                                    
+                                        <img src="https://production-media.paperswithcode.com/tasks/default.gif">
+                                    
+                                    <span>Likelihood-Based Generative Models</span>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="/methods/category/attention-mechanisms-1">
+                                <span class="badge badge-primary">
+                                    
+                                        <img src="https://production-media.paperswithcode.com/thumbnails/method/89bd0b48-388d-41e9-adcf-61e231993d82.jpg">
+                                    
+                                    <span>Attention Mechanisms</span>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                
+            </div>
+        </div>
+
+
+    </div>
+    </div>
+
+    <script id="task_data" type="application/json">[{"name": "Decoder", "slug": "decoder", "papers": 52, "y": 7.142857142857142, "dot_color": "#2f7ed8"}, {"name": "Image Generation", "slug": "image-generation", "papers": 50, "y": 6.868131868131869, "dot_color": "#0d233a"}, {"name": "Disentanglement", "slug": "disentanglement", "papers": 27, "y": 3.708791208791209, "dot_color": "#8bbc21"}, {"name": "Denoising", "slug": "denoising", "papers": 23, "y": 3.159340659340659, "dot_color": "#f28f43"}, {"name": "Diversity", "slug": "diversity", "papers": 20, "y": 2.7472527472527473, "dot_color": "rgb(128, 133, 233)"}, {"name": "Quantization", "slug": "quantization", "papers": 16, "y": 2.197802197802198, "dot_color": "rgb(241, 92, 128)"}, {"name": "Anomaly Detection", "slug": "anomaly-detection", "papers": 13, "y": 1.7857142857142856, "dot_color": "rgb(228, 211, 84)"}, {"name": "Language Modelling", "slug": "language-modelling", "papers": 13, "y": 1.7857142857142856, "dot_color": "rgb(43, 144, 143)"}, {"name": "Video Generation", "slug": "video-generation", "papers": 10, "y": 1.3736263736263736, "dot_color": "rgb(255, 116, 116)"}, {"name": "Other", "y": 69.23076923076928, "dot_color": "rgb(170, 255, 250)"}]</script>
+    <script id="time_series_data" type="application/json">[{"name": "VAE", "data": [{"time": "2017-12-31 00:00:00", "prop": 0.0003856090695253152}, {"time": "2018-03-31 00:00:00", "prop": 0.0007075193585157816}, {"time": "2018-06-30 00:00:00", "prop": 0.000614481275390025}, {"time": "2018-09-30 00:00:00", "prop": 0.0010344114199020756}, {"time": "2018-12-31 00:00:00", "prop": 0.0007103189978044685}, {"time": "2019-03-31 00:00:00", "prop": 0.0009818194129397027}, {"time": "2019-06-30 00:00:00", "prop": 0.00120040989606207}, {"time": "2019-09-30 00:00:00", "prop": 0.0010994897239998873}, {"time": "2019-12-31 00:00:00", "prop": 0.001218785547911814}, {"time": "2020-03-31 00:00:00", "prop": 0.0010409532940693056}, {"time": "2020-06-30 00:00:00", "prop": 0.0016427554484722375}, {"time": "2020-09-30 00:00:00", "prop": 0.0011184719951819668}, {"time": "2020-12-31 00:00:00", "prop": 0.0010228814124658113}, {"time": "2021-03-31 00:00:00", "prop": 0.0014772929879524209}, {"time": "2021-06-30 00:00:00", "prop": 0.00045474276028855494}, {"time": "2021-09-30 00:00:00", "prop": 0.0010538296168275513}, {"time": "2021-12-31 00:00:00", "prop": 0.0009367961571425724}, {"time": "2022-03-31 00:00:00", "prop": 0.000999869582228405}, {"time": "2022-06-30 00:00:00", "prop": 0.0007502657191088511}, {"time": "2022-09-30 00:00:00", "prop": 0.0009045485871812543}, {"time": "2022-12-31 00:00:00", "prop": 0.0006888814533430432}, {"time": "2023-03-31 00:00:00", "prop": 0.0009566193902591191}, {"time": "2023-06-30 00:00:00", "prop": 0.0008320726172465961}, {"time": "2023-09-30 00:00:00", "prop": 0.0007922136713444998}, {"time": "2023-12-31 00:00:00", "prop": 0.0009044579340093577}, {"time": "2024-03-31 00:00:00", "prop": 0.0006002400960384153}, {"time": "2024-06-30 00:00:00", "prop": 0.0005758946935417523}, {"time": "2024-09-30 00:00:00", "prop": 0.0007384509702902284}]}, {"name": "AutoEncoder", "data": [{"time": "2017-12-31 00:00:00", "prop": 0.002120849882389234}, {"time": "2018-03-31 00:00:00", "prop": 0.002279784599661963}, {"time": "2018-06-30 00:00:00", "prop": 0.002355511555661762}, {"time": "2018-09-30 00:00:00", "prop": 0.0023101855044479693}, {"time": "2018-12-31 00:00:00", "prop": 0.0026475526281802917}, {"time": "2019-03-31 00:00:00", "prop": 0.0032501608152486713}, {"time": "2019-06-30 00:00:00", "prop": 0.004011125750256185}, {"time": "2019-09-30 00:00:00", "prop": 0.0028473964647176566}, {"time": "2019-12-31 00:00:00", "prop": 0.0037646931368831593}, {"time": "2020-03-31 00:00:00", "prop": 0.0032050404054239146}, {"time": "2020-06-30 00:00:00", "prop": 0.0037016756105574416}, {"time": "2020-09-30 00:00:00", "prop": 0.002903725372107029}, {"time": "2020-12-31 00:00:00", "prop": 0.0042471815169776075}, {"time": "2021-03-31 00:00:00", "prop": 0.004508290670130664}, {"time": "2021-06-30 00:00:00", "prop": 0.0036379420823084395}, {"time": "2021-09-30 00:00:00", "prop": 0.003751633435906083}, {"time": "2021-12-31 00:00:00", "prop": 0.0038667756273544477}, {"time": "2022-03-31 00:00:00", "prop": 0.003825587966786941}, {"time": "2022-06-30 00:00:00", "prop": 0.003730487881124565}, {"time": "2022-09-30 00:00:00", "prop": 0.0037043418332184702}, {"time": "2022-12-31 00:00:00", "prop": 0.003405042612238471}, {"time": "2023-03-31 00:00:00", "prop": 0.003992846150646758}, {"time": "2023-06-30 00:00:00", "prop": 0.0033282904689863843}, {"time": "2023-09-30 00:00:00", "prop": 0.0036026859815904634}, {"time": "2023-12-31 00:00:00", "prop": 0.00368740542326892}, {"time": "2024-03-31 00:00:00", "prop": 0.003618590293260161}, {"time": "2024-06-30 00:00:00", "prop": 0.003932538050185109}, {"time": "2024-09-30 00:00:00", "prop": 0.0033831358406319766}]}, {"name": "GAN", "data": [{"time": "2017-12-31 00:00:00", "prop": 0.0018894844406740446}, {"time": "2018-03-31 00:00:00", "prop": 0.003183837113321017}, {"time": "2018-06-30 00:00:00", "prop": 0.0032089577714812414}, {"time": "2018-09-30 00:00:00", "prop": 0.002689469691745397}, {"time": "2018-12-31 00:00:00", "prop": 0.0037776055792328555}, {"time": "2019-03-31 00:00:00", "prop": 0.003080881606121136}, {"time": "2019-06-30 00:00:00", "prop": 0.003952569169960474}, {"time": "2019-09-30 00:00:00", "prop": 0.0025654760226664036}, {"time": "2019-12-31 00:00:00", "prop": 0.003873029630030876}, {"time": "2020-03-31 00:00:00", "prop": 0.0028763183125599234}, {"time": "2020-06-30 00:00:00", "prop": 0.0012703975468185303}, {"time": "2020-09-30 00:00:00", "prop": 0.0001075453841521122}, {"time": "2020-12-31 00:00:00", "prop": 6.670965733472683e-05}, {"time": "2021-03-31 00:00:00", "prop": 0.00012735284378900181}, {"time": "2021-06-30 00:00:00", "prop": 0.00016536100374129272}, {"time": "2021-09-30 00:00:00", "prop": 4.2153184673102054e-05}, {"time": "2021-12-31 00:00:00", "prop": 3.986366626138606e-05}, {"time": "2022-03-31 00:00:00", "prop": 2.173629526583489e-05}, {"time": "2022-06-30 00:00:00", "prop": 2.0840714419690307e-05}, {"time": "2022-09-30 00:00:00", "prop": 2.1536871123363198e-05}, {"time": "2022-12-31 00:00:00", "prop": 3.936465447674533e-05}, {"time": "2023-03-31 00:00:00", "prop": 8.318429480514078e-05}, {"time": "2023-06-30 00:00:00", "prop": 7.5642965204236e-05}, {"time": "2023-09-30 00:00:00", "prop": 9.431115135053569e-05}, {"time": "2023-12-31 00:00:00", "prop": 0.0}, {"time": "2024-03-31 00:00:00", "prop": 3.429943405933802e-05}, {"time": "2024-06-30 00:00:00", "prop": 3.290826820238585e-05}, {"time": "2024-09-30 00:00:00", "prop": 1.717327837884252e-05}]}, {"name": "CycleGAN", "data": [{"time": "2017-12-31 00:00:00", "prop": 0.0003470481625727837}, {"time": "2018-03-31 00:00:00", "prop": 0.0002358397861719272}, {"time": "2018-06-30 00:00:00", "prop": 0.00023896494042945413}, {"time": "2018-09-30 00:00:00", "prop": 0.00013792152265361008}, {"time": "2018-12-31 00:00:00", "prop": 0.0003874467260751647}, {"time": "2019-03-31 00:00:00", "prop": 0.00030470257642956295}, {"time": "2019-06-30 00:00:00", "prop": 0.00029278290147855365}, {"time": "2019-09-30 00:00:00", "prop": 0.0004228806630768797}, {"time": "2019-12-31 00:00:00", "prop": 0.00043334597259086724}, {"time": "2020-03-31 00:00:00", "prop": 0.0005204766470346528}, {"time": "2020-06-30 00:00:00", "prop": 0.00037235790165370713}, {"time": "2020-09-30 00:00:00", "prop": 0.0004086724597780263}, {"time": "2020-12-31 00:00:00", "prop": 0.00042249449645326986}, {"time": "2021-03-31 00:00:00", "prop": 0.00025470568757800363}, {"time": "2021-06-30 00:00:00", "prop": 0.00022737138014427747}, {"time": "2021-09-30 00:00:00", "prop": 0.0002739957003751633}, {"time": "2021-12-31 00:00:00", "prop": 0.0004185684957445536}, {"time": "2022-03-31 00:00:00", "prop": 0.0002608355431900187}, {"time": "2022-06-30 00:00:00", "prop": 0.000270929287455974}, {"time": "2022-09-30 00:00:00", "prop": 0.0002799793246037216}, {"time": "2022-12-31 00:00:00", "prop": 0.0003936465447674533}, {"time": "2023-03-31 00:00:00", "prop": 0.00016636858961028157}, {"time": "2023-06-30 00:00:00", "prop": 0.000226928895612708}, {"time": "2023-09-30 00:00:00", "prop": 0.0003017956843217142}, {"time": "2023-12-31 00:00:00", "prop": 0.0003130815925417007}, {"time": "2024-03-31 00:00:00", "prop": 0.0002915451895043732}, {"time": "2024-06-30 00:00:00", "prop": 0.00014808720691073633}, {"time": "2024-09-30 00:00:00", "prop": 0.0003262922891980079}]}, {"name": "StyleGAN", "data": [{"time": "2017-12-31 00:00:00", "prop": 0.0}, {"time": "2018-03-31 00:00:00", "prop": 0.0}, {"time": "2018-06-30 00:00:00", "prop": 0.0}, {"time": "2018-09-30 00:00:00", "prop": 0.0}, {"time": "2018-12-31 00:00:00", "prop": 3.228722717293039e-05}, {"time": "2019-03-31 00:00:00", "prop": 0.0}, {"time": "2019-06-30 00:00:00", "prop": 8.78348704435661e-05}, {"time": "2019-09-30 00:00:00", "prop": 0.00014096022102562657}, {"time": "2019-12-31 00:00:00", "prop": 0.000135420616434646}, {"time": "2020-03-31 00:00:00", "prop": 0.0002191480619093275}, {"time": "2020-06-30 00:00:00", "prop": 0.00015332384185740884}, {"time": "2020-09-30 00:00:00", "prop": 0.00025810892196506923}, {"time": "2020-12-31 00:00:00", "prop": 0.0002223655244490894}, {"time": "2021-03-31 00:00:00", "prop": 0.00043299966888260614}, {"time": "2021-06-30 00:00:00", "prop": 2.067012546766159e-05}, {"time": "2021-09-30 00:00:00", "prop": 2.1076592336551027e-05}, {"time": "2021-12-31 00:00:00", "prop": 0.0}, {"time": "2022-03-31 00:00:00", "prop": 0.0002825718384558536}, {"time": "2022-06-30 00:00:00", "prop": 0.00037513285955442555}, {"time": "2022-09-30 00:00:00", "prop": 0.00040920055134390074}, {"time": "2022-12-31 00:00:00", "prop": 0.00041332887200582597}, {"time": "2023-03-31 00:00:00", "prop": 0.0006030861373372708}, {"time": "2023-06-30 00:00:00", "prop": 0.000359304084720121}, {"time": "2023-09-30 00:00:00", "prop": 0.00047155575675267845}, {"time": "2023-12-31 00:00:00", "prop": 0.0003652618579653175}, {"time": "2024-03-31 00:00:00", "prop": 0.0003429943405933802}, {"time": "2024-06-30 00:00:00", "prop": 0.00014808720691073633}, {"time": "2024-09-30 00:00:00", "prop": 0.0001717327837884252}]}, {"name": "Denoising Autoencoder", "data": [{"time": "2017-12-31 00:00:00", "prop": 0.0001542436278101261}, {"time": "2018-03-31 00:00:00", "prop": 7.861326205730907e-05}, {"time": "2018-06-30 00:00:00", "prop": 3.413784863277916e-05}, {"time": "2018-09-30 00:00:00", "prop": 0.00013792152265361008}, {"time": "2018-12-31 00:00:00", "prop": 0.00019372336303758234}, {"time": "2019-03-31 00:00:00", "prop": 0.00016927920912753497}, {"time": "2019-06-30 00:00:00", "prop": 0.00014639145073927682}, {"time": "2019-09-30 00:00:00", "prop": 0.00014096022102562657}, {"time": "2019-12-31 00:00:00", "prop": 0.000270841232869292}, {"time": "2020-03-31 00:00:00", "prop": 0.0002191480619093275}, {"time": "2020-06-30 00:00:00", "prop": 0.00010951702989814916}, {"time": "2020-09-30 00:00:00", "prop": 0.00015056353781295708}, {"time": "2020-12-31 00:00:00", "prop": 0.00017789241955927152}, {"time": "2021-03-31 00:00:00", "prop": 0.00010188227503120145}, {"time": "2021-06-30 00:00:00", "prop": 0.00014469087827363112}, {"time": "2021-09-30 00:00:00", "prop": 0.00010538296168275513}, {"time": "2021-12-31 00:00:00", "prop": 9.965916565346515e-05}, {"time": "2022-03-31 00:00:00", "prop": 0.00015215406686084425}, {"time": "2022-06-30 00:00:00", "prop": 6.252214325907092e-05}, {"time": "2022-09-30 00:00:00", "prop": 4.3073742246726395e-05}, {"time": "2022-12-31 00:00:00", "prop": 0.00013777629066860867}, {"time": "2023-03-31 00:00:00", "prop": 0.00016636858961028157}, {"time": "2023-06-30 00:00:00", "prop": 3.7821482602118e-05}, {"time": "2023-09-30 00:00:00", "prop": 7.544892108042855e-05}, {"time": "2023-12-31 00:00:00", "prop": 8.696710903936132e-05}, {"time": "2024-03-31 00:00:00", "prop": 3.429943405933802e-05}, {"time": "2024-06-30 00:00:00", "prop": 8.227067050596462e-05}, {"time": "2024-09-30 00:00:00", "prop": 3.434655675768504e-05}]}]</script>
+
+
+
+</div>
+
+
+
+
+
+<div class="footer">
+  <div class="footer-contact">
+    <span class="footer-contact-item">Contact us on:</span>
+
+    <a class="footer-contact-item" href="mailto:hello@paperswithcode.com">
+    <span class=" icon-wrapper icon-ion" data-name="mail"><svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><path d="M424 80H88a56.06 56.06 0 0 0-56 56v240a56.06 56.06 0 0 0 56 56h336a56.06 56.06 0 0 0 56-56V136a56.06 56.06 0 0 0-56-56zm-14.18 92.63l-144 112a16 16 0 0 1-19.64 0l-144-112a16 16 0 1 1 19.64-25.26L256 251.73l134.18-104.36a16 16 0 0 1 19.64 25.26z"/></svg></span> hello@paperswithcode.com
+    </a>.
+    <span class="footer-contact-item">
+        Papers With Code is a free resource with all data licensed under <a rel="noreferrer" href="https://creativecommons.org/licenses/by-sa/4.0/">CC-BY-SA</a>.
+    </span>
+  </div>
+
+  <div class="footer-links">
+      <a href="/site/terms">Terms</a>
+      <a href="/site/data-policy">Data policy</a>
+      <a href="/site/cookies-policy">Cookies policy</a>
+      <a href="/about#team" class="fair-logo"> from
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANAAAAAgCAMAAABU6AZfAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAJcEhZcwAAFiUAABYlAUlSJPAAAABFUExURUdwTBwqMhwqMxsqMhkqMxsqMhwqMgCA+hwrMxJIgBsrMxsqMgJ28AF58wF38BsqMwB58hsqMwF17wF07hwrMwRm4QJz7Wj6SIIAAAAUdFJOUwDP87wcPIT+4A1tVti1Ta0smZVzG3JP8wAABR9JREFUWMO1memWpCoMgF0QxX1//0e9kCAkAadq5tzKjzndQmM+szNFEWQ9puu6xn02BXm4j23bTsdapKJAMguFgRVT/Ejyx4uH5hgvL1PUfm69jEd6bN05GTJvXF5X/hfRcPyWe2kTLDFdRA4ENVMbZZJGMt3ppEttNMDC2X/Qa7MK1OrveZoKz2/445I+U4znuvaExxKZLFCqtym/A6rzn+OjbHj8ubwDmfESslvtgWea13WeckQPUKJTf/4USHkDnVXzCrT74DnmeX+8rjgcxA4QBmPpyAKdOm+5XwFpgHH/bG9AMzLMqM9DxxCQaM0qLr7U4xE/AgIDVRBHlcoDeYd7lFee6GZOBvaaskD8S6nut0Dg0ItZEt+IQAfjseIzRDvS/WCxWQJ17phqEGqepQBS/VaXZa0H/4XUYMVt6nr309DEjYvduPT2gWELQTr0iQbC1+SADOg/kjVvspGqX6zSRAgEKbqOf6zgd82AVB+8s0YNm5NL6Y8MGzttwKt0krP9+9A/+hzQTALoUX5MnxW7iCIEUmD7IVZb8G0G1HRE9UqbWKkEUFPSR0MWqH5eB65XmgzQdN3WGjxReROxPD2LROeBIEiD7UGLraBAjMcS9W9AquTPckBgoMqEWG1SIGN57otn5KO9Y30N4rq6MQFC5TX1cEWBfJLY+mbQ5ZMUm8UK7F1A9GNc90T3enkpCZhCdUzfdQq0Wp774gnZao55YU3SgkmAVBez1eDfR4BABd/XqY36ichyaLUnyJZ8jatimUBjqQTouK2M3OGs4miiiduN5bkHCL15C9Zw7heBRMHYSMRxIGyYFsPqpwTqactT8w0P0OSA9iRY9jQvrDyIAhCoAjrrR90I1PNCpcivHEh+cATUmS5xoCaNB3ggMzqgRO/RYPIb1WviDkB4sv22kB8ghQcgUIFWzyUmaQ6kpf5DCoTFh5fwQQCt493e9ypD5Xjq7S5cMQeEubpBf2oKCoSMohPzduBAi2yimhRIc3NvrOd+gCxPexvhcGPM3SRoJpbmIhAGSudTNgNCR+qIRL05UCebsxTIiAYOX6sEkONphRkw9A9ZjADIZIDg857we5MBSiQHVMlWJgXyeTBIyVpGD4RttHC4yVtENHn7K5ASdeM3QGX2sKcKBCBmITYmrGii9TOQT7JYwxOgrhbyby4XJrvs54kuR8vlCg4XEgEOEs8Q8R5DYZboCwEESpTmi/Hhc1Lo8zxPlghZjpbLqWVGUGxSes1y4W2lkkC+Wf0C6GPaxtZo0VQW4nOhsJLqAg01HXqgGN0+083MegKoYLdisbDqzHVG1iZJYe0EUDoB+dj149gDRCCgt2lZ1zA5nhvCyEwvrc/b3N/HiZlMgINmZaR/aX3MJluf7Kepo8+F5tRfUh1wR0odzg8Srnm9w7L5SyB/p6H9Ptt0Vj310ngAlDHbnLo3mGc00sJiQ+4KEM+I8xC7fWv5VGcz3Y0C2ZCa70sgf0tXbnbY1jXpln3W6jYXDG4jNthdrfVWn8n4gAVAZe+0GgaEaeGFx4XRQyTM9yWQnNuIAy5/HPAWPuDJ8Yc66sYvSeY/8dhlYqH0kuQzkFQ03nnHCyI/gtc0GfM7BVPmL5J0yHPkXm6d3u6v/TLw3GL5ayDr6WW47awHYmS1VC+XJOVQcCCZBPk13SCvgmcb8uI/UqjqdvlOlk3j5OU20C0putdO1ZWNo0a8oumXslx0vMYaNrfPURt2hnp5G2rhtsEP5j/3Wqt0fQd1YgAAAABJRU5ErkJggg==">
+      </a>
+  </div>
+</div>
+
+
+
+<script>
+  // MathJax
+  window.MathJax = {
+    tex: {
+      inlineMath: [
+        ["$", "$"],
+        ["\\(", "\\)"],
+      ],
+    },
+  };
+
+  const mathjaxScript = document.createElement("script");
+  mathjaxScript.src = "https://production-assets.paperswithcode.com/static/js/mathjax/tex-chtml.js";
+  document.head.appendChild(mathjaxScript);
+</script>
+
+
+<script src="https://production-assets.paperswithcode.com/perf/766.4af6b88b.js" defer></script><script src="https://production-assets.paperswithcode.com/perf/351.a22a9607.js" defer></script><script src="https://production-assets.paperswithcode.com/perf/814.49dcf06c.js" defer></script><script src="https://production-assets.paperswithcode.com/perf/view_method.c1f0a493.js" defer></script>
+
+
+
+</body>
+</html>
+
+
