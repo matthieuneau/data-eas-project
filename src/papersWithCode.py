@@ -45,3 +45,47 @@ def get_method_id_for_api(method_name: str) -> int|None:
     print(f"Extracted Method ID: {method_id}")
 
     return int(method_id) if method_id else None
+
+
+
+def get_paper_urls_from_api_response(method_id: int) -> Set[str]:
+    """
+    Retrieve the arXiv ids of the papers corresponding to a method from the PapersWithCode API
+    :param endpoint_url: the url of the endpoint of the PapersWithCode API
+    :return: The list of ids of the arXiv papers corresponding to the method
+    """
+    endpoint = f"https://paperswithcode.com/api/internal/papers/?format=json&papermethod__method_id={str(method_id)}"
+    try:
+        response = requests.get(endpoint)
+        response.raise_for_status()  # Raise an error for HTTP response codes >= 400
+        
+        data = response.json()
+        paper_urls = set()
+
+        print(f"{data['count']} papers found" )
+        page_number = 1
+        while True: # Loop through all the pages of the API response
+            print(f"Page {page_number}")
+            for paper in data['results']:
+                paper_urls.add(paper['url'])
+                
+            if data['next'] == "null":
+                break
+            else:
+                data = requests.get(data['next']).json()
+                page_number += 1
+
+        return paper_urls
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error while connecting to the API: {e}")
+        return set()
+    
+
+
+
+if __name__ == "__main__":
+    # papers_with_code_url = "https://paperswithcode.com/paper/finite-scalar-quantization-vq-vae-made-simple"
+    # print(retrieve_arxiv_id(papers_with_code_url))
+    # print(get_paper_urls_from_api_response(468))
+    print(get_method_id_for_api("vae"))
