@@ -1,3 +1,7 @@
+"""
+This file contains functions to save papers metadata to a Neo4j graph database.
+"""
+
 from typing import List
 from neo4j import GraphDatabase
 from dotenv import load_dotenv
