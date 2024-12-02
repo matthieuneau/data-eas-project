@@ -1,7 +1,6 @@
 import requests
 import pdfplumber
 import io
-import re
 
 
 def extract_text_from_pdf(url: str) -> str:
