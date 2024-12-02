@@ -6,7 +6,10 @@ from typing import Set, List, Dict
 import requests
 import re
 from bs4 import BeautifulSoup 
-
+from getReferencesArticles import extract_arxiv_references_from_article
+from processPdf import extract_text_from_pdf
+from tqdm import tqdm
+from concurrent.futures import ThreadPoolExecutor, as_completed, ProcessPoolExecutor
 
 def retrieve_arxiv_id(paper_url: str) -> str|None:
     """
@@ -113,6 +116,36 @@ def compute_method_graph(method_name: str) -> Dict[str, List[str]]:
     paper_urls = get_paper_urls_from_api_response(method_id)
     paper_ids: List[str] = [paper_id for paper_id in (retrieve_arxiv_id(paper) for paper in paper_urls) if paper_id is not None]
     graph: Dict[str, List[str]] = dict.fromkeys(paper_ids, [])
+
+    def process_paper(paper_id: str) -> List[str]:
+        text = extract_text_from_pdf(f"http://arxiv.org/pdf/{paper_id}")
+        references = extract_arxiv_references_from_article(text)
+        return [ref for ref in references if ref in paper_ids]
+
+    # # Parallelize attempt with threads
+    # with ThreadPoolExecutor(max_workers=4) as executor:
+    #     future_to_paper_id = {executor.submit(process_paper, paper_id): paper_id for paper_id in graph}
+    #     for future in tqdm(as_completed(future_to_paper_id), total=len(graph)):
+    #         paper_id = future_to_paper_id[future]
+    #         try:
+    #             graph[paper_id] = future.result()
+    #         except Exception as e:
+    #             print(f"Error processing paper {paper_id}: {e}")
+
+    # # Parallelize attempt with processes
+    # with ProcessPoolExecutor(max_workers=4) as executor:
+    #     future_to_paper_id = {executor.submit(process_paper, paper_id): paper_id for paper_id in graph}
+    #     for future in tqdm(as_completed(future_to_paper_id), total=len(graph)):
+    #         paper_id = future_to_paper_id[future]
+    #         try:
+    #             graph[paper_id] = future.result()
+    #         except Exception as e:
+    #             print(f"Error processing paper {paper_id}: {e}")
+
+
+    for paper_id in tqdm(graph):
+        graph[paper_id] = process_paper(paper_id)
+
     return graph
 
 
@@ -124,3 +157,4 @@ if __name__ == "__main__":
     # print(retrieve_arxiv_id('/paper/applying-rlaif-for-code-generation-with-api'))
     # print(scrape_paper_ids_from_method_page("rlaif"))
     print(compute_method_graph('rlaif'))
+    # print(extract_arxiv_references_from_article('2408.17072v1'))
