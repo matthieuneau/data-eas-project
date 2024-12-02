@@ -2,7 +2,7 @@
 This file contains functions that retrieve all the arXiv papers corresponding to a given method from the PapersWithCode website
 """
 
-from typing import Set, List
+from typing import Set, List, Dict
 import requests
 import re
 from bs4 import BeautifulSoup 
@@ -98,6 +98,22 @@ def scrape_paper_ids_from_method_page(method_name: str) -> List[str]:
     return paper_ids
     
 
+# Main function
+def compute_method_graph(method_name: str) -> Dict[str, List[str]]:
+    """
+    Compute the graph of papers corresponding to a method from the PapersWithCode website
+    :param method_name: the name of the method
+    :return: The graph of papers corresponding to the method. The keys are the ids of the papers and the values 
+    are the ids of the papers that the key paper references
+    """
+    method_id = get_method_id_for_api(method_name)
+    if method_id is None:
+        print('Unable to get method id required for API call')
+        return {}
+    paper_urls = get_paper_urls_from_api_response(method_id)
+    paper_ids: List[str] = [paper_id for paper_id in (retrieve_arxiv_id(paper) for paper in paper_urls) if paper_id is not None]
+    graph: Dict[str, List[str]] = dict.fromkeys(paper_ids, [])
+    return graph
 
 
 if __name__ == "__main__":
@@ -106,4 +122,5 @@ if __name__ == "__main__":
     # print(get_paper_urls_from_api_response(468))
     # print(get_method_id_for_api("vae"))
     # print(retrieve_arxiv_id('/paper/applying-rlaif-for-code-generation-with-api'))
-    print(scrape_paper_ids_from_method_page("rlaif"))
+    # print(scrape_paper_ids_from_method_page("rlaif"))
+    print(compute_method_graph('rlaif'))
