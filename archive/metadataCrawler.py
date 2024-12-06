@@ -1,10 +1,12 @@
-from processPdf import extract_text_from_pdf
-from utils import convert_metadata_for_neo4j
-from getReferencesArticles import extract_arxiv_references_from_article
+from typing import List
+
 from fetchArticleMetadata import fetch_arxiv_metadata
 from saveMetadataToDb import store_articles_in_db
+
 import saveToGraphDb
-from typing import List
+from getReferencesArticles import extract_arxiv_references_from_article
+from processPdf import extract_text_from_pdf
+from utils import convert_metadata_for_neo4j
 
 
 class MetadataCrawler:
@@ -12,9 +14,9 @@ class MetadataCrawler:
         self.db = db  # TODO: Move the connection info here
         self.scraped_counter = 0
         self.initial_id = initial_id
-        self.visited_ids: List[int] = (
-            []
-        )  # List of ids of articles that have already been scraped
+        self.visited_ids: List[
+            int
+        ] = []  # List of ids of articles that have already been scraped
         self.queue = [self.initial_id]  # List of article ids to be scraped
 
     def get_article_arxiv_references(self, article_id: int):
