@@ -1,6 +1,6 @@
 from typing import List
 
-from fetchArticleMetadata import fetch_arxiv_metadata
+from src.fetchArticleMetadata import fetch_arxiv_metadata
 from saveMetadataToDb import store_articles_in_db
 
 import saveToGraphDb
