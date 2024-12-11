@@ -1,3 +1,7 @@
+"""
+Function that retrieves arXiv article metadata.
+"""
+
 import requests
 import xml.etree.ElementTree as ET
 import time
@@ -69,7 +73,7 @@ def fetch_arxiv_metadata(arxiv_query: str) -> dict:
 
         except requests.exceptions.RequestException as e:
             print(f"Network or API error for query {arxiv_query}: {e}, retrying...")
-            time.sleep(2 ** attempt)  # Exponential backoff
+            time.sleep(2 ** attempt)  
             continue
 
     # If all retries fail
