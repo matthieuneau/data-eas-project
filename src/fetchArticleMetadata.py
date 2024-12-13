@@ -84,3 +84,16 @@ def fetch_arxiv_metadata(arxiv_query: str) -> dict:
         "published": "0000-00-00T00:00:00Z",
         "link": ""
     }
+
+if __name__ == "__main__":
+    # Example queries for testing the function
+    test_queries = [
+        "id:1706.03762",  
+    ]
+
+    for query in test_queries:
+        print(f"Fetching metadata for query: {query}")
+        metadata = fetch_arxiv_metadata(query)
+        print("Metadata retrieved:")
+        print(metadata)
+        print("-" * 50)  # Separator for readability
