@@ -2,6 +2,7 @@
 This file contains functions that retrieve all the arXiv papers corresponding to a given method from the PapersWithCode website
 """
 
+
 from typing import Set, List, Dict
 import requests
 import re
@@ -11,21 +12,19 @@ from processPdf import extract_text_from_pdf
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed, ProcessPoolExecutor
 
+
 def retrieve_arxiv_id(paper_url: str) -> str|None:
     """
-    Retrieve the arXiv id of a given paper from the PapersWithCode website. Returns None if the paper is not on arXiv.
-    :param paper_url: the url of the paper on the PapersWithCode website
-    :return: The id of the arXiv paper corresponding to the method
+    Retrieve the arXiv id of a given paper from the PapersWithCode website. 
     """
     html = requests.get(f'https://paperswithcode.com{paper_url}')
     arxiv_id = re.findall(r"https:\/\/arxiv\.org\/pdf\/[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*\.pdf", html.text)
     return arxiv_id[0].split("/")[-1].strip(".pdf") if arxiv_id else None
 
+
 def get_method_id_for_api(method_name: str) -> int|None:
     """
     Retrieve the id of a method from the PapersWithCode API
-    :param method_name: the name of the method
-    :return: The id of the method
     """
     html = requests.get(f"https://paperswithcode.com/method/{method_name}")
     soup = BeautifulSoup(html.text, 'html.parser')
@@ -50,12 +49,9 @@ def get_method_id_for_api(method_name: str) -> int|None:
     return int(method_id) if method_id else None
 
 
-
 def get_paper_urls_from_api_response(method_id: int) -> Set[str]:
     """
     Retrieve the arXiv ids of the papers corresponding to a method from the PapersWithCode API
-    :param endpoint_url: the url of the endpoint of the PapersWithCode API
-    :return: The list of ids of the arXiv papers corresponding to the method
     """
     endpoint = f"https://paperswithcode.com/api/internal/papers/?format=json&papermethod__method_id={str(method_id)}"
 
@@ -85,8 +81,6 @@ def get_paper_urls_from_api_response(method_id: int) -> Set[str]:
 def scrape_paper_ids_from_method_page(method_name: str) -> List[str]:
     """
     Scrape the arXiv ids of the papers corresponding to a method from the PapersWithCode website
-    :param method_name: the name of the method
-    :return: The list of ids of the arXiv papers corresponding to the method
     """
     method_id = get_method_id_for_api(method_name)
     paper_ids: List[str] = []
@@ -105,9 +99,6 @@ def scrape_paper_ids_from_method_page(method_name: str) -> List[str]:
 def compute_method_graph(method_name: str) -> Dict[str, List[str]]:
     """
     Compute the graph of papers corresponding to a method from the PapersWithCode website
-    :param method_name: the name of the method
-    :return: The graph of papers corresponding to the method. The keys are the ids of the papers and the values 
-    are the ids of the papers that the key paper references
     """
     method_id = get_method_id_for_api(method_name)
     if method_id is None:
@@ -147,7 +138,6 @@ def compute_method_graph(method_name: str) -> Dict[str, List[str]]:
         graph[paper_id] = process_paper(paper_id)
 
     return graph
-
 
 if __name__ == "__main__":
     # papers_with_code_url = "https://paperswithcode.com/paper/finite-scalar-quantization-vq-vae-made-simple"

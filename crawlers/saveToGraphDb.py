@@ -2,10 +2,13 @@
 This file contains functions to save papers metadata to a Neo4j graph database.
 """
 
+
 from typing import List
 from neo4j import GraphDatabase
 from dotenv import load_dotenv
 import os
+
+
 
 load_dotenv()
 
@@ -54,9 +57,6 @@ if __name__ == "__main__":
 def add_relation_to_db(paper_index1: str, paper_index2: str) -> None:
     """
     Add a citation relation between two papers in the graph database.
-
-    :param paper_index1: The unique identifier (e.g., DOI) of the citing paper.
-    :param paper_index2: The unique identifier of the cited paper.
     """
     query = """
     MATCH (p1:Paper {paper_index: $paper_index1})

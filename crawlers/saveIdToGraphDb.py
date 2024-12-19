@@ -1,10 +1,14 @@
 """
 This file contains functions that save paper ids and its references to a Neo4j graph database.
 """
+
+
 from typing import List, Dict
 from neo4j import GraphDatabase
 from dotenv import load_dotenv
 import os
+
+
 
 load_dotenv()
 
@@ -19,10 +23,10 @@ driver = GraphDatabase.driver(
     NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD)    
 )
 
+
 def add_graph_to_db(graph: Dict[str, List[str]]) -> None:
     """
     Write the whole graph to the database.
-    :param graph: The graph to write to the database.
     """
     db_setup_query = "CREATE CONSTRAINT FOR (p:Paper) REQUIRE p.id IS UNIQUE"
     add_paper_query = "MERGE (p:Paper {id: $paper_id})"
@@ -53,14 +57,11 @@ def add_graph_to_db(graph: Dict[str, List[str]]) -> None:
                         reference_id=reference_id
                     )
                 )
-    
-        
+          
 
 def count_papers() -> int:
     """
     Count the number of papers in the graph database.
-
-    :return: The number of papers in the database.
     """
     query = """
     MATCH (p:Paper)

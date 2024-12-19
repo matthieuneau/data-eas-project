@@ -2,9 +2,11 @@
 Function to test if Neo4j connection is established.
 """
 
+
 from neo4j import GraphDatabase
 from dotenv import load_dotenv
 import os
+
 
 load_dotenv()
 
@@ -18,6 +20,7 @@ def test_neo4j_connection():
     with driver.session() as session:
         result = session.run("RETURN 1")
         print("Test result from Neo4j:", result.single()[0])
+
 
 if __name__ == "__main__":
     test_neo4j_connection()

@@ -2,6 +2,7 @@
 Function that retrieves arXiv article metadata.
 """
 
+
 import requests
 import xml.etree.ElementTree as ET
 import time
@@ -10,8 +11,6 @@ import time
 def fetch_arxiv_metadata(arxiv_query: str) -> dict:
     """
     Fetches metadata from the ArXiv API.
-    :param arxiv_query: The ArXiv query, e.g., "id:1805.08355"
-    :return: A dictionary containing metadata for the paper.
     """
     base_url = "http://export.arxiv.org/api/query"
     retries = 3  # Number of retries for failed requests
